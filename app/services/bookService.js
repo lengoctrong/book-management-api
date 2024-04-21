@@ -7,10 +7,9 @@ class BookService {
 
   extractBookData(payload) {
     const book = {
-      name: payload.name,
-      email: payload.email,
-      address: payload.address,
-      phone: payload.phone,
+      title: payload.title,
+      author: payload.author,
+      years: payload.years,
       favorite: payload.favorite
     }
 
