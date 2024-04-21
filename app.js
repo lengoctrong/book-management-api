@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 
-const ApiError = require('./app/apiError')
+const ApiError = require('./app/api-error')
 
 const app = express()
 
