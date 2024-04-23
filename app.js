@@ -6,6 +6,7 @@ const ApiError = require('./app/api-error')
 const app = express()
 
 const booksRouter = require('./app/routes/bookRoute')
+const usersRouter = require('./app/routes/userRoute')
 
 app.use(cors())
 app.use(express.json())
@@ -15,6 +16,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/books', booksRouter)
+app.use('/api/users', usersRouter)
 
 // handle 404 response
 app.use((req, res, next) => {

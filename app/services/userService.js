@@ -1,35 +1,30 @@
 const { ObjectId } = require('mongodb')
 
-class BookService {
+class UserService {
   constructor(client) {
-    this.Book = client.db().collection('books')
+    this.User = client.db().collection('users')
   }
 
-  extractBookData(payload) {
-    const book = {
-      title: payload.title,
-      author: payload.author,
-      years: payload.years,
-      image: payload.image,
-      quantity: payload.quantity,
-      borrow: payload.borrow,
-      category: payload.category
+  extractUserData(payload) {
+    const user = {
+      email: payload.email,
+      password: payload.password
     }
 
     // Remove undefined fields
-    Object.keys(book).forEach(
-      (key) => book[key] === undefined && delete book[key]
+    Object.keys(user).forEach(
+      (key) => user[key] === undefined && delete user[key]
     )
 
-    return book
+    return user
   }
 
   async create(payload) {
-    const book = this.extractBookData(payload)
-    const result = await this.Book.findOneAndUpdate(
-      book,
+    const user = this.extractUserData(payload)
+    const result = await this.User.findOneAndUpdate(
+      user,
       {
-        $set: { favorite: book.favorite === true }
+        $set: { favorite: user.favorite === true }
       },
       { returnDocument: 'after', upsert: true }
     )
@@ -38,18 +33,18 @@ class BookService {
   }
 
   async find(filter) {
-    const cursor = await this.Book.find(filter)
+    const cursor = await this.User.find(filter)
     return await cursor.toArray()
   }
 
   async findByName(name) {
-    return await this.Book.find({
+    return await this.User.find({
       name: { $regex: new RegExp(name), $options: 'i' }
     })
   }
 
   async findById(id) {
-    return await this.Book.findOne({
+    return await this.User.findOne({
       _id: ObjectId.isValid(id) ? new ObjectId(id) : null
     })
   }
@@ -58,8 +53,8 @@ class BookService {
     const filter = {
       _id: ObjectId.isValid(id) ? new ObjectId(id) : null
     }
-    const update = this.extractBookData(payload)
-    const result = await this.Book.findOneAndUpdate(
+    const update = this.extractUserData(payload)
+    const result = await this.User.findOneAndUpdate(
       filter,
       { $set: update },
       { returnDocument: 'after' }
@@ -69,7 +64,7 @@ class BookService {
   }
 
   async delete(id) {
-    const result = await this.Book.findOneAndDelete({
+    const result = await this.User.findOneAndDelete({
       _id: ObjectId.isValid(id) ? new ObjectId(id) : null
     })
     return result.value
@@ -80,8 +75,8 @@ class BookService {
   }
 
   async deleteAll() {
-    const result = await this.Book.deleteMany({})
+    const result = await this.User.deleteMany({})
     return result.deletedCount
   }
 }
-module.exports = BookService
+module.exports = UserService
