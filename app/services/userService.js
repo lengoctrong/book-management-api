@@ -24,7 +24,7 @@ class UserService {
     const result = await this.User.findOneAndUpdate(
       user,
       {
-        $set: { favorite: user.favorite === true }
+        $set: { createdAt: new Date().toISOString() }
       },
       { returnDocument: 'after', upsert: true }
     )

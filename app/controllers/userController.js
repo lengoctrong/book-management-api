@@ -3,8 +3,8 @@ const UserService = require('../services/userService')
 const MongoDB = require('../utils/mongodbUtil')
 
 exports.create = async (req, res, next) => {
-  if (!req.body?.name) {
-    return next(new ApiError(400, 'Name can not be empty'))
+  if (!req.body?.email || !req.body?.password) {
+    return next(new ApiError(400, 'Email or password can not be empty'))
   }
 
   try {
