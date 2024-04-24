@@ -11,8 +11,6 @@ exports.create = async (req, res, next) => {
     const userService = new UserService(MongoDB.client)
     const document = await userService.create(req.body)
 
-    console.log('document: ', document)
-
     return res.send(document)
   } catch (err) {
     next(new ApiError(400, err.message))
