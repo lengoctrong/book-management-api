@@ -21,7 +21,7 @@ class UserService {
 
   async create(payload) {
     const user = this.extractUserData(payload)
-    const result = await this.User.findOneAndUpdate(
+    const result = await this.User.findOne(
       user,
       {
         $set: { createdAt: new Date().toISOString() }
@@ -29,7 +29,7 @@ class UserService {
       { returnDocument: 'after', upsert: true }
     )
 
-    return result.value
+    return result
   }
 
   async find(filter) {
