@@ -3,8 +3,14 @@ const BookService = require('../services/bookService')
 const MongoDB = require('../utils/mongodbUtil')
 
 exports.create = async (req, res, next) => {
-  if (!req.body?.name) {
-    return next(new ApiError(400, 'Name can not be empty'))
+  if (
+    !req.body?.title ||
+    !req.body?.author ||
+    !req.body?.image ||
+    !req.body?.quantity ||
+    !req.body?.category
+  ) {
+    return next(new ApiError(400, 'Can not be empty'))
   }
 
   try {

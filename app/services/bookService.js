@@ -26,15 +26,15 @@ class BookService {
 
   async create(payload) {
     const book = this.extractBookData(payload)
-    const result = await this.Book.findOneAndUpdate(
-      book,
-      {
-        $set: { favorite: book.favorite === true }
-      },
-      { returnDocument: 'after', upsert: true }
-    )
-
-    return result.value
+    // const result = await this.Book.findOneAndUpdate(book, {
+    //   returnDocument: 'after',
+    //   upsert: true
+    // })
+    // console.log(result.value)
+    // return result.value
+    const result = await this.Book.insertOne(book)
+    const newBook = result.ops?.[0]
+    return newBook
   }
 
   async find(filter) {
