@@ -20,16 +20,37 @@ class UserService {
   }
 
   async create(payload) {
-    const user = this.extractUserData(payload)
-    const result = await this.User.findOneAndUpdate(
-      user,
-      {
-        $set: { createdAt: new Date().toISOString() }
-      },
-      { returnDocument: 'after', upsert: true }
-    )
+    const { email, password, type } = payload
+    const user = this.extractUserData({ email, password })
 
-    return result.value
+    try {
+      if (type == 'signup') {
+        console.log('user: ', user)
+        const existingUser = await this.User.findOne({
+          email: user.email
+        })
+
+        console.log('existingUser: ', existingUser)
+        if (existingUser) throw new Error('Người dùng đã tồn tại')
+
+        const result = await this.User.insertOne(user)
+        console.log('user: ', result.ops[0])
+        return result.ops[0]
+      }
+
+      if (type == 'login') {
+        const result = await this.User.findOne(user, {
+          returnDocument: 'after',
+          upsert: false
+        })
+        if (result) {
+          return 'has account'
+        }
+        return 'no account'
+      }
+    } catch (err) {
+      throw new Error(err)
+    }
   }
 
   async find(filter) {
