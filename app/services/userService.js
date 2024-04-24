@@ -31,12 +31,12 @@ class UserService {
       if (type == 'signup') {
         if (existingUser) throw new Error('Người dùng đã tồn tại')
         const result = await this.User.insertOne(user)
-        return result.ops[0]
+        const currentUser = result.ops?.[0]
+        return currentUser
       }
 
       if (type == 'login') {
         if (!existingUser) throw new Error('Người dùng chưa tồn tại')
-
         const isPasswordMatch = existingUser.password === user.password
         if (!isPasswordMatch) throw new Error('Mật khẩu không chính xác')
 
