@@ -7,6 +7,7 @@ exports.create = async (req, res, next) => {
     !req.body?.title ||
     !req.body?.author ||
     !req.body?.image ||
+    !req.body?.date ||
     !req.body?.quantity ||
     !req.body?.category
   ) {
@@ -101,16 +102,5 @@ exports.deleteAll = async (req, res, next) => {
     })
   } catch (error) {
     return next(new ApiError(500, 'An error occurred while removing all books'))
-  }
-}
-exports.findAllFavorite = async (req, res, next) => {
-  try {
-    const bookService = new BookService(MongoDB.client)
-    const documents = await bookService.findFavorite()
-    return res.send(documents)
-  } catch (error) {
-    return next(
-      new ApiError(500, 'An error occurred while retrieving favorite books')
-    )
   }
 }

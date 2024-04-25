@@ -9,7 +9,7 @@ class BookService {
     const book = {
       title: payload.title,
       author: payload.author,
-      years: payload.years,
+      date: payload.date ?? new Date().toISOString(),
       image: payload.image,
       quantity: payload.quantity,
       borrow: payload.borrow,
@@ -26,6 +26,7 @@ class BookService {
 
   async create(payload) {
     const book = this.extractBookData(payload)
+    console.log('book: ', book)
     const result = await this.Book.insertOne(book)
     const newBook = result.ops?.[0]
     return newBook
@@ -50,7 +51,7 @@ class BookService {
 
   async update(id, payload) {
     const filter = {
-      _id: ObjectId.isValid(id) ? new ObjectId(id) : null
+      _id: ObjectId.isValid(id) ? id : new ObjectId(id)
     }
     const update = this.extractBookData(payload)
     const result = await this.Book.findOneAndUpdate(
@@ -59,18 +60,15 @@ class BookService {
       { returnDocument: 'after' }
     )
 
-    return result.value
+    return result
   }
 
   async delete(id) {
     const result = await this.Book.findOneAndDelete({
-      _id: ObjectId.isValid(id) ? new ObjectId(id) : null
+      _id: ObjectId.isValid(id) ? id : new ObjectId(id)
     })
-    return result.value
-  }
-
-  async findFavorite() {
-    return await this.find({ favorite: true })
+    console.log('deleted book', result)
+    return result
   }
 
   async deleteAll() {
