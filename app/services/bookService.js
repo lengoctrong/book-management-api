@@ -51,16 +51,18 @@ class BookService {
 
   async update(id, payload) {
     const filter = {
-      _id: ObjectId.isValid(id) ? id : new ObjectId(id)
+      _id: ObjectId.isValid(id) ? id : ObjectId(id)
     }
-    const update = this.extractBookData(payload)
-    const result = await this.Book.findOneAndUpdate(
-      filter,
-      { $set: update },
-      { returnDocument: 'after' }
-    )
 
-    return result
+    const updatedDocument = {
+      $set: {
+        payload
+      }
+    }
+    const result = await this.Book.findOneAndUpdate(filter, updatedDocument, {
+      returnOriginal: false
+    })
+    return result.value
   }
 
   async delete(id) {
